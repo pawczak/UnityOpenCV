@@ -653,6 +653,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaae69bcd19a2a54ebdf47d115a65980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetAreaPercentSize: {x: 0.5, y: 0.5}
+  targetAreaColor: {r: 0.33665246, g: 0.745283, b: 0.20038268, a: 1}
   cameraOutputImage: {fileID: 1497084891}
   cameraTexture: {fileID: 0}
 --- !u!1 &1772615744
@@ -750,6 +752,7 @@ RectTransform:
   - {fileID: 821676058}
   - {fileID: 1497084890}
   - {fileID: 2136896451}
+  - {fileID: 1855231885}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -816,11 +819,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1855231884}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -960, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1772615748}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1855231886
 MonoBehaviour:
