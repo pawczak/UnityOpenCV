@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 namespace OpenCvSharp.Demo {
     public class CameraOutput : MonoBehaviour {
-        [Header("Target Area")] private Rect targetArea;
-        public Vector2 targetAreaPercentSize = new Vector2(0.25f, 0.5f);
+        [Header("Target Area")] public Rect targetArea;
+        public Vector2 targetAreaPercentSize = new Vector2(0.25f, 0.25f);
         public Color targetAreaColor;
 
         public RawImage cameraOutputImage;
@@ -13,12 +13,15 @@ namespace OpenCvSharp.Demo {
         void Start() {
             cameraTexture = new WebCamTexture();
             cameraTexture.Play();
+            cameraOutputImage.texture = cameraTexture;
             setTargetArea();
         }
 
         private void Update() {
-            Mat inputTexture = Unity.TextureToMat(cameraTexture);
-            cameraOutputImage.texture = Unity.MatToTexture(addTargetAreaRect(inputTexture));
+            // Mat inputTexture = Unity.TextureToMat(cameraTexture);
+            // cameraOutputImage.texture = addTargetAreaRect(inputTexture);
+            // inputTexture.Release();
+            // inputTexture = null;
         }
 
         private void setTargetArea() {
@@ -28,9 +31,12 @@ namespace OpenCvSharp.Demo {
                 new Size(cameraTexture.width * targetAreaPercentSize.x, cameraTexture.height * targetAreaPercentSize.y));
         }
 
-        private Mat addTargetAreaRect(Mat inputMat) {
+        private Texture addTargetAreaRect(Mat inputMat) {
             Cv2.Rectangle(inputMat, targetArea.TopLeft, targetArea.BottomRight, new Scalar(0, 255, 0), 5);
-            return inputMat;
+            Texture outputTexture = Unity.MatToTexture(inputMat);
+            inputMat.Release();
+            inputMat = null;
+            return outputTexture;
         }
     }
 }

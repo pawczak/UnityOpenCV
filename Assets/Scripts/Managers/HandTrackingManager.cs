@@ -1,29 +1,35 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 namespace OpenCvSharp.Demo {
-    public class HandTrackingManager : MonoBehaviour {
-        public CameraOutput cameraOutput;
-        public OpenCVView openCVView;
+    using UnityEngine;
+    using OpenCvSharp;
 
-        private BackgroundSubtractor backgroundSubtractor;
+    public class HandTrackingManager : WebCamera {
+        // Our sketch generation function
+        protected override bool ProcessTexture(WebCamTexture input, ref Texture2D output) {
+            Mat img = Unity.TextureToMat(input, TextureParameters);
+            //
+            //Convert image to grayscale
+            Mat imgGray = new Mat();
+            Cv2.CvtColor(img, imgGray, ColorConversionCodes.BGR2GRAY);
 
-        void Start() {
-            // backgroundSubtractor = BackgroundSubtractorMOG.Create(15, 3, 0.2f, 0);
-            backgroundSubtractor = BackgroundSubtractorKNN.Create(50, 400, false);
-        }
+            // Clean up image using Gaussian Blur
+            Mat imgGrayBlur = new Mat();
+            Cv2.GaussianBlur(imgGray, imgGrayBlur, new Size(5, 5), 0);
 
-        void Update() {
-            if (cameraOutput != null) {
-                Mat mat = Unity.TextureToMat(cameraOutput.cameraTexture);
-                Mat outputMat = new Mat();
-                // Cv2.Rectangle(mat,, );
-                // Cv2.CvtColor(mat, outputMat, ColorConversionCodes.BGR2GRAY);
-                backgroundSubtractor.Apply(mat, outputMat);
+            //Extract edges
+            Mat cannyEdges = new Mat();
+            Cv2.Canny(imgGrayBlur, cannyEdges, 10.0, 70.0);
 
-                Texture2D texture = Unity.MatToTexture(outputMat);
-                openCVView.outputTexture.texture = texture;
-            }
+            //Do an invert binarize the image
+            Mat mask = new Mat();
+            Cv2.Threshold(cannyEdges, mask, 70.0, 255.0, ThresholdTypes.BinaryInv);
+
+            // result, passing output texture as parameter allows to re-use it's buffer
+            // should output texture be null a new texture will be created
+            output = Unity.MatToTexture(img, output);
+            
+            return true;
         }
     }
 }
