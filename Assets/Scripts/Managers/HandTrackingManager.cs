@@ -15,12 +15,20 @@ namespace OpenCvSharp.Demo {
 
         void Update() {
             if (cameraOutput != null) {
+                //memory leak fix
+                if (openCVView.outputTexture.texture != null) {
+                    Destroy(openCVView.outputTexture.texture);
+                }
+
+                
                 Mat mat = Unity.TextureToMat(cameraOutput.cameraTexture);
                 Mat outputMat = new Mat();
+                
+                //TODO: detect hand and nail processing
                 // Cv2.Rectangle(mat,, );
                 // Cv2.CvtColor(mat, outputMat, ColorConversionCodes.BGR2GRAY);
                 backgroundSubtractor.Apply(mat, outputMat);
-
+                
                 Texture2D texture = Unity.MatToTexture(outputMat);
                 openCVView.outputTexture.texture = texture;
             }

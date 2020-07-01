@@ -17,6 +17,11 @@ namespace OpenCvSharp.Demo {
         }
 
         private void Update() {
+            //memory leak fix
+            if (cameraOutputImage.texture != null) {
+                Destroy(cameraOutputImage.texture);
+            }
+
             Mat inputTexture = Unity.TextureToMat(cameraTexture);
             cameraOutputImage.texture = Unity.MatToTexture(addTargetAreaRect(inputTexture));
         }

@@ -19,7 +19,7 @@ public class FPSCounter : MonoBehaviour {
         elapsedTime += Time.deltaTime;
         if (elapsedTime > refreshRate) {
             frameRate = (int) System.Math.Round(frameCount / elapsedTime, 1, System.MidpointRounding.AwayFromZero);
-            frameCount = 0; 
+            frameCount = 0;
             elapsedTime = 0;
             updateLabel();
         }
@@ -27,9 +27,9 @@ public class FPSCounter : MonoBehaviour {
 
     private void updateLabel() {
         label.text = $"FPS: {frameRate}";
-        
-        for (int i = 0; i < colorFPSValues.Count - 1; i++) {
-            if (colorFPSValues[i] <= frameRate && frameRate <= colorFPSValues[i + 1] || colors.Count - 1 == i) {
+
+        for (int i = 0; i < colorFPSValues.Count; i++) {
+            if (colors.Count - 1 == i || frameRate <= colorFPSValues[i] || colorFPSValues[i] <= frameRate && frameRate <= colorFPSValues[i + 1]) {
                 label.color = colors[i];
                 break;
             }
