@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 namespace OpenCvSharp.Demo {
     public class CameraOutput : MonoBehaviour {
-        [Header("Target Area")] private Rect targetArea;
-        public Vector2 targetAreaPercentSize = new Vector2(0.25f, 0.5f);
+        [Header("Target Area")] public Rect targetArea;
+        public Vector2 targetAreaPercentSize = new Vector2(0.1f, 0.1f);
         public Color targetAreaColor;
 
         public RawImage cameraOutputImage;

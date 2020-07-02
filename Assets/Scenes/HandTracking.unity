@@ -653,7 +653,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaae69bcd19a2a54ebdf47d115a65980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetAreaPercentSize: {x: 0.5, y: 0.5}
+  targetArea:
+    X: 0
+    Y: 0
+    Width: 0
+    Height: 0
+  targetAreaPercentSize: {x: 0.15, y: 0.25}
   targetAreaColor: {r: 0.33665246, g: 0.745283, b: 0.20038268, a: 1}
   cameraOutputImage: {fileID: 1497084891}
   cameraTexture: {fileID: 0}
@@ -839,6 +844,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraOutput: {fileID: 1497084893}
   openCVView: {fileID: 821676061}
+  treshHoldFilter: 1
+  treshHoldLow: 56.5
+  treshHoldHigh: 255
+  filter2D: 1
+  filter2DShape: 2
+  filter2DSize: {x: 3, y: 3}
+  erodeFilter: 0
+  erodeIterations: 1
+  dilatateFilter: 0
+  dilatateIterations: 1
 --- !u!1 &2109674990
 GameObject:
   m_ObjectHideFlags: 0
