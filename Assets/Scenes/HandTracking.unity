@@ -653,6 +653,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaae69bcd19a2a54ebdf47d115a65980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  subTargetAreas: []
+  subTargetAreasColumnCount: 3
+  subTargetAreasRowCount: 3
+  subTargetAreaSize: 10
   targetArea:
     X: 0
     Y: 0
