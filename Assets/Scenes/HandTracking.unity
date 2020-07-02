@@ -658,7 +658,7 @@ MonoBehaviour:
     Y: 0
     Width: 0
     Height: 0
-  targetAreaPercentSize: {x: 0.15, y: 0.25}
+  targetAreaPercentSize: {x: 0.1, y: 0.3}
   targetAreaColor: {r: 0.33665246, g: 0.745283, b: 0.20038268, a: 1}
   cameraOutputImage: {fileID: 1497084891}
   cameraTexture: {fileID: 0}
@@ -845,11 +845,11 @@ MonoBehaviour:
   cameraOutput: {fileID: 1497084893}
   openCVView: {fileID: 821676061}
   treshHoldFilter: 1
-  treshHoldLow: 56.5
+  treshHoldLow: 152
   treshHoldHigh: 255
   filter2D: 1
   filter2DShape: 2
-  filter2DSize: {x: 3, y: 3}
+  filter2DSize: {x: 10, y: 10}
   erodeFilter: 0
   erodeIterations: 1
   dilatateFilter: 0
