@@ -12,6 +12,8 @@ namespace OpenCvSharp.Demo {
         private Mat handMask;
         private bool calibrated = false;
 
+        [Header("Calibration")] public ROIAreaType roiAreaType = ROIAreaType.Single;
+
         [Header("TreshHold filter")] public bool treshHoldFilter = true;
         [Range(0, 255)] public float treshHoldLow;
 
@@ -22,10 +24,16 @@ namespace OpenCvSharp.Demo {
         public Vector2Int filter2DSize = new Vector2Int(3, 3);
 
         [Header("Erode Filter")] public bool erodeFilter = false;
+        public MorphShapes erodeShape = MorphShapes.Ellipse;
+        public Vector2Int erodeSize = new Vector2Int(3, 3);
         [Range(0, 25)] public int erodeIterations = 1;
 
         [Header("Dilatate Filter")] public bool dilatateFilter = false;
+        public MorphShapes dilatateShape = MorphShapes.Ellipse;
+        public Vector2Int dilatateSize = new Vector2Int(3, 3);
         [Range(0, 25)] public int dilatateIterations = 1;
+
+        [Header("BinaryAnd Filter")] public bool bitwiseFilter = false;
 
         // [Header("BackgroundSubstractor")] public BackgroundSubractorType bgSubctractorType;
         // private BackgroundSubtractorGMG bgSubstractorGMG;
@@ -72,8 +80,27 @@ namespace OpenCvSharp.Demo {
 
             Cv2.CvtColor(mat, handHist, ColorConversionCodes.BGR2HSV);
 
-            Mat hsvROI = handHist.GetRectSubPix(cameraOutput.targetArea.Size, cameraOutput.targetArea.Center);
-            Cv2.CalcHist(new[] {hsvROI}, new[] {0, 1}, new Mat(), handHist, 2, new[] {180, 255}, new[] {new Rangef(0, 180), new Rangef(0, 255)});
+            int roisCount = 0;
+            Mat[] ROIs = null;
+
+            switch (roiAreaType) {
+                case ROIAreaType.Single:
+                    roisCount = 1;
+                    ROIs = new Mat[roisCount];
+                    ROIs[0] = handHist.GetRectSubPix(cameraOutput.targetArea.Size, cameraOutput.targetArea.Center);
+                    break;
+                case ROIAreaType.Multi:
+                    roisCount = cameraOutput.subTargetAreasCount;
+                    ROIs = new Mat[roisCount];
+                    for (int i = 0; i < cameraOutput.subTargetAreasCount; i++) {
+                        ROIs[i] = handHist.GetRectSubPix(cameraOutput.subTargetAreas[i].Size, cameraOutput.subTargetAreas[i].Center);
+                    }
+
+                    break;
+            }
+
+
+            Cv2.CalcHist(ROIs, new[] {0, 1}, new Mat(), handHist, 2, new[] {180, 255}, new[] {new Rangef(0, 180), new Rangef(0, 255)});
             Cv2.Normalize(handHist, handHist, 0, 255, NormTypes.MinMax);
 
             calibrated = true;
@@ -85,7 +112,6 @@ namespace OpenCvSharp.Demo {
             Cv2.CvtColor(cameraMat, hsvMat, ColorConversionCodes.BGR2HSV);
             Cv2.CalcBackProject(new[] {hsvMat}, new[] {0, 1}, handHist, dstMat, new[] {new Rangef(0, 180), new Rangef(0, 255)});
 
-
             if (filter2D) {
                 Mat disc = Cv2.GetStructuringElement(filter2DShape, (new Size(filter2DSize.x, filter2DSize.y)));
                 Cv2.Filter2D(dstMat, dstMat, -1, disc);
@@ -96,16 +122,20 @@ namespace OpenCvSharp.Demo {
             }
 
             if (dilatateFilter) {
-                Cv2.Dilate(dstMat, dstMat, new Mat(), null, dilatateIterations);
+                Mat dilatateShape = Cv2.GetStructuringElement(this.dilatateShape, (new Size(dilatateSize.x, dilatateSize.y)));
+                Cv2.Dilate(dstMat, dstMat, dilatateShape, null, dilatateIterations);
             }
 
             if (erodeFilter) {
-                Cv2.Erode(dstMat, dstMat, new Mat(), null, erodeIterations);
+                Mat erodeShape = Cv2.GetStructuringElement(this.erodeShape, (new Size(erodeSize.x, erodeSize.y)));
+                Cv2.Erode(dstMat, dstMat, erodeShape, null, erodeIterations);
             }
-            // Cv2.Merge(new []{dstMat, dstMat, dstMat}, dstMat);
-            // if (binaryFilter) {
-            //     // Cv2.BitwiseAnd(cameraMat, dstMat);
-            // }
+
+            handMask = dstMat;
+
+            if (bitwiseFilter) {
+                // Cv2.BitwiseAnd(cameraMat, dstMat, dstMat); //TODO: we need it to mask our hand, in this form it return exception
+            }
 
             return dstMat;
         }
@@ -115,5 +145,15 @@ namespace OpenCvSharp.Demo {
         BackgroundSubtractorTypeKNN,
         BackgroundSubtractorTypeMOG,
         BackgroundSubtractorTypeGMG
+    }
+
+    public enum ROIAreaType {
+        Single,
+        Multi
+    }
+
+    public enum debugViewType {
+        BinaryHandCMask,
+        MaskedOutput
     }
 }

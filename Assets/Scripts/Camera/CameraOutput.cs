@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 namespace OpenCvSharp.Demo {
     public class CameraOutput : MonoBehaviour {
+        public HandTrackingManager handTrackingManager;
+
         [Header("Target Area")] public List<Rect> subTargetAreas = new List<Rect>();
         public int subTargetAreasColumnCount = 3;
         public int subTargetAreasRowCount = 3;
@@ -65,11 +67,17 @@ namespace OpenCvSharp.Demo {
         }
 
         private Mat addTargetAreaRect(Mat inputMat) {
-            for (int i = 0; i < subTargetAreas.Count; i++) {
-                Cv2.Rectangle(inputMat, subTargetAreas[i].TopLeft, subTargetAreas[i].BottomRight, new Scalar(0, 255, 0), 5);
-            }
+            switch (handTrackingManager.roiAreaType) {
+                case ROIAreaType.Single:
+                    Cv2.Rectangle(inputMat, targetArea.TopLeft, targetArea.BottomRight, new Scalar(0, 255, 0), 5);
+                    break;
+                case ROIAreaType.Multi:
+                    for (int i = 0; i < subTargetAreas.Count; i++) {
+                        Cv2.Rectangle(inputMat, subTargetAreas[i].TopLeft, subTargetAreas[i].BottomRight, new Scalar(0, 255, 0), 2);
+                    }
 
-            Cv2.Rectangle(inputMat, targetArea.TopLeft, targetArea.BottomRight, new Scalar(0, 255, 0), 5);
+                    break;
+            }
 
             return inputMat;
         }

@@ -653,16 +653,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaae69bcd19a2a54ebdf47d115a65980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handTrackingManager: {fileID: 1855231886}
   subTargetAreas: []
   subTargetAreasColumnCount: 3
-  subTargetAreasRowCount: 3
-  subTargetAreaSize: 10
+  subTargetAreasRowCount: 4
+  subTargetAreaSize: 30
   targetArea:
     X: 0
     Y: 0
     Width: 0
     Height: 0
-  targetAreaPercentSize: {x: 0.1, y: 0.3}
+  targetAreaPercentSize: {x: 0.15, y: 0.4}
   targetAreaColor: {r: 0.33665246, g: 0.745283, b: 0.20038268, a: 1}
   cameraOutputImage: {fileID: 1497084891}
   cameraTexture: {fileID: 0}
@@ -848,16 +849,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraOutput: {fileID: 1497084893}
   openCVView: {fileID: 821676061}
+  roiAreaType: 1
   treshHoldFilter: 1
-  treshHoldLow: 152
+  treshHoldLow: 200
   treshHoldHigh: 255
   filter2D: 1
   filter2DShape: 2
   filter2DSize: {x: 10, y: 10}
-  erodeFilter: 0
-  erodeIterations: 1
-  dilatateFilter: 0
-  dilatateIterations: 1
+  erodeFilter: 1
+  erodeShape: 0
+  erodeSize: {x: 5, y: 5}
+  erodeIterations: 2
+  dilatateFilter: 1
+  dilatateShape: 2
+  dilatateSize: {x: 3, y: 3}
+  dilatateIterations: 4
+  bitwiseFilter: 0
 --- !u!1 &2109674990
 GameObject:
   m_ObjectHideFlags: 0
