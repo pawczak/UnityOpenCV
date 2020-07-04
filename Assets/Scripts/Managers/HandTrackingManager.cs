@@ -35,7 +35,8 @@ namespace OpenCvSharp.Demo {
 
         [Header("BinaryAnd Filter")] public bool bitwiseFilter = false;
 
-        [Header("Camera output scale")] [Range(0, 1)] public float cameraOutputScale = 0.25f;
+        [Header("Camera output scale")] [Range(0, 1)]
+        public float cameraOutputScale = 0.25f;
 
         // [Header("BackgroundSubstractor")] public BackgroundSubractorType bgSubctractorType;
         // private BackgroundSubtractorGMG bgSubstractorGMG;

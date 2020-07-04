@@ -829,7 +829,7 @@ MonoBehaviour:
     Y: 0
     Width: 0
     Height: 0
-  targetAreaPercentSize: {x: 0.15, y: 0.4}
+  targetAreaPercentSize: {x: 0.25, y: 0.55}
   targetAreaColor: {r: 0.33665246, g: 0.745283, b: 0.20038268, a: 1}
   cameraOutputImage: {fileID: 1497084891}
   cameraTexture: {fileID: 0}
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   treshHoldHigh: 255
   filter2D: 1
   filter2DShape: 2
-  filter2DSize: {x: 10, y: 10}
+  filter2DSize: {x: 10, y: 15}
   erodeFilter: 1
   erodeShape: 0
   erodeSize: {x: 5, y: 5}
