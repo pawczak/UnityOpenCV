@@ -10,9 +10,9 @@ namespace OpenCvSharp.Demo {
         private Mat handHist;
         private Mat handHSV;
         private Mat handMask;
-        private bool calibrated = false;
 
         [Header("Calibration")] public ROIAreaType roiAreaType = ROIAreaType.Single;
+        private bool calibrated = false;
 
         [Header("TreshHold filter")] public bool treshHoldFilter = true;
         [Range(0, 255)] public float treshHoldLow;
@@ -34,6 +34,8 @@ namespace OpenCvSharp.Demo {
         [Range(0, 25)] public int dilatateIterations = 1;
 
         [Header("BinaryAnd Filter")] public bool bitwiseFilter = false;
+
+        [Header("Camera output scale")] [Range(0, 1)] public float cameraOutputScale = 0.25f;
 
         // [Header("BackgroundSubstractor")] public BackgroundSubractorType bgSubctractorType;
         // private BackgroundSubtractorGMG bgSubstractorGMG;
@@ -57,28 +59,37 @@ namespace OpenCvSharp.Demo {
                 }
 
                 Mat cameraOutputMat = Unity.TextureToMat(cameraOutput.cameraTexture);
-                Mat outputMat = new Mat();
-
-                //TODO: detect hand and nail processing
-
+                Mat scaledCameraOutputMat = scaleCameraOutput(cameraOutputMat);
 
                 if (Input.GetKeyDown("space") || Input.touches.Length > 0) {
                     calibrate(cameraOutputMat);
                 }
 
                 if (calibrated) {
-                    Cv2.CvtColor(cameraOutputMat, handHSV, ColorConversionCodes.RGB2HSV);
-                    Cv2.InRange(handHSV, new Scalar(0, 140, 60), new Scalar(255, 255, 180), handHSV);
-
-                    openCVView.outputTexture.texture = Unity.MatToTexture(histMasking(cameraOutputMat));
+                    openCVView.outputTexture.texture = Unity.MatToTexture(histMasking(scaledCameraOutputMat));
                 }
             }
         }
 
-        private void calibrate(Mat mat) {
-            Debug.Log("calibrate");
+        private Mat scaleCameraOutput(Mat cameraOutputMat) {
+            float width = cameraOutputMat.Width * cameraOutputScale;
+            float height = cameraOutputMat.Height * cameraOutputScale;
+            Size scaledSize = new Size(width, height);
 
-            Cv2.CvtColor(mat, handHist, ColorConversionCodes.BGR2HSV);
+            Mat scaledCameraOutputMat = new Mat();
+            Cv2.Resize(cameraOutputMat, scaledCameraOutputMat, scaledSize);
+
+            return scaledCameraOutputMat;
+        }
+
+        /// <summary>
+        /// Sets handHist Mat which is nornalized histogram computed from ROI
+        /// </summary>
+        /// <param name="mat"></param>
+        private void calibrate(Mat cameraOutputMat) {
+            Debug.Log("Calibration");
+
+            Cv2.CvtColor(cameraOutputMat, handHist, ColorConversionCodes.BGR2HSV);
 
             int roisCount = 0;
             Mat[] ROIs = null;

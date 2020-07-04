@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,9 +24,12 @@ namespace OpenCvSharp.Demo {
         public RawImage cameraOutputImage;
         public WebCamTexture cameraTexture;
 
+        [Header("Debug")] public TextMeshProUGUI cameraResolutionText;
+
         void Start() {
             cameraTexture = new WebCamTexture();
             cameraTexture.Play();
+            cameraResolutionText.text = $"Camera resolution: {cameraTexture.width}x{cameraTexture.height}";
             setTargetArea();
         }
 
