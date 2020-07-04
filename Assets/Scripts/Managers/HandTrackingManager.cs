@@ -14,14 +14,20 @@ namespace OpenCvSharp.Demo {
         [Header("Calibration")] public ROIAreaType roiAreaType = ROIAreaType.Single;
         private bool calibrated = false;
 
-        [Header("TreshHold filter")] public bool treshHoldFilter = true;
-        [Range(0, 255)] public float treshHoldLow;
+        [Header("TreshHold filter")] public bool thresholdFilter = true;
+        [Range(0, 255)] public float thresholdLow;
 
-        [Range(0, 255)] public float treshHoldHigh;
+        [Range(0, 255)] public float thresholdHigh;
 
         [Header("Filter2D Filter")] public bool filter2D = false;
         public MorphShapes filter2DShape = MorphShapes.Ellipse;
         public Vector2Int filter2DSize = new Vector2Int(3, 3);
+
+        [Header("Morphology transformation")] public bool morphologyTransformation = true;
+        public MorphShapes morphologyTransformationShape = MorphShapes.Ellipse;
+        public Vector2Int morphologyTransformationSize = new Vector2Int(3, 3);
+        public int morphologyTransformationIterations = 1;
+        public MorphTypes morphologyTransformationType = MorphTypes.Close;
 
         [Header("Erode Filter")] public bool erodeFilter = false;
         public MorphShapes erodeShape = MorphShapes.Ellipse;
@@ -87,6 +93,7 @@ namespace OpenCvSharp.Demo {
         /// Sets handHist Mat which is nornalized histogram computed from ROI
         /// </summary>
         /// <param name="mat"></param>
+        /// TODO: add multi-step calibration (front hand, back hand, fist with visible fingernails) / or take multiple frames for creatig histogram
         private void calibrate(Mat cameraOutputMat) {
             Debug.Log("Calibration");
 
@@ -125,22 +132,28 @@ namespace OpenCvSharp.Demo {
             Cv2.CalcBackProject(new[] {hsvMat}, new[] {0, 1}, handHist, dstMat, new[] {new Rangef(0, 180), new Rangef(0, 255)});
 
             if (filter2D) {
-                Mat disc = Cv2.GetStructuringElement(filter2DShape, (new Size(filter2DSize.x, filter2DSize.y)));
-                Cv2.Filter2D(dstMat, dstMat, -1, disc);
+                Mat filter2DMat = Cv2.GetStructuringElement(filter2DShape, (new Size(filter2DSize.x, filter2DSize.y)));
+                Cv2.Filter2D(dstMat, dstMat, -1, filter2DMat);
             }
 
-            if (treshHoldFilter) {
-                Cv2.Threshold(dstMat, dstMat, treshHoldLow, treshHoldHigh, ThresholdTypes.Binary);
+            if (thresholdFilter) {
+                Cv2.Threshold(dstMat, dstMat, thresholdLow, thresholdHigh, ThresholdTypes.Binary);
+            }
+
+            if (morphologyTransformation) {
+                Mat morphologyTransformationMat =
+                    Cv2.GetStructuringElement(morphologyTransformationShape, (new Size(morphologyTransformationSize.x, morphologyTransformationSize.y)));
+                Cv2.MorphologyEx(dstMat, dstMat, morphologyTransformationType, morphologyTransformationMat, null, morphologyTransformationIterations);
             }
 
             if (dilatateFilter) {
-                Mat dilatateShape = Cv2.GetStructuringElement(this.dilatateShape, (new Size(dilatateSize.x, dilatateSize.y)));
-                Cv2.Dilate(dstMat, dstMat, dilatateShape, null, dilatateIterations);
+                Mat dilatateShapeMat = Cv2.GetStructuringElement(this.dilatateShape, (new Size(dilatateSize.x, dilatateSize.y)));
+                Cv2.Dilate(dstMat, dstMat, dilatateShapeMat, null, dilatateIterations);
             }
 
             if (erodeFilter) {
-                Mat erodeShape = Cv2.GetStructuringElement(this.erodeShape, (new Size(erodeSize.x, erodeSize.y)));
-                Cv2.Erode(dstMat, dstMat, erodeShape, null, erodeIterations);
+                Mat erodeShapeMat = Cv2.GetStructuringElement(this.erodeShape, (new Size(erodeSize.x, erodeSize.y)));
+                Cv2.Erode(dstMat, dstMat, erodeShapeMat, null, erodeIterations);
             }
 
             handMask = dstMat;

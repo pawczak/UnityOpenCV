@@ -1017,17 +1017,22 @@ MonoBehaviour:
   cameraOutput: {fileID: 1497084893}
   openCVView: {fileID: 821676061}
   roiAreaType: 0
-  treshHoldFilter: 1
-  treshHoldLow: 100
-  treshHoldHigh: 255
+  thresholdFilter: 1
+  thresholdLow: 225
+  thresholdHigh: 255
   filter2D: 1
   filter2DShape: 2
   filter2DSize: {x: 10, y: 15}
-  erodeFilter: 1
+  morphologyTransformation: 1
+  morphologyTransformationShape: 2
+  morphologyTransformationSize: {x: 5, y: 10}
+  morphologyTransformationIterations: 1
+  morphologyTransformationType: 3
+  erodeFilter: 0
   erodeShape: 0
   erodeSize: {x: 5, y: 5}
   erodeIterations: 1
-  dilatateFilter: 1
+  dilatateFilter: 0
   dilatateShape: 2
   dilatateSize: {x: 5, y: 5}
   dilatateIterations: 1
